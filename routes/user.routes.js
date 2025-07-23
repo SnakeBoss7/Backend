@@ -230,13 +230,43 @@ router.post("/comment/:postId", isloggedin, async (req, res) => {
     res.status(500).json({ error: "Failed to post comment" });
   }
 });
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// make sure path is correct
+
+router.get("/someoneprofile/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ error: "Invalid user ID format" });
+    }
+
+    const user = await userModel.findById(userId).select("username email profilepic");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const posts = await postModel
+      .find({ user: userId })
+      .sort({ date: -1 }) // newest first
+      .select("content image date likes comments")
+      .populate("user", "username profilepic");
+
+    res.status(200).json({ user, posts });
+  } catch (err) {
+    console.error("🔥 Error fetching user and posts:", err);
+    res.status(500).json({ error: "Server error while getting user profile" });
+  }
+});
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function isloggedin(req, res, next) {
   const token = req.cookies.token;
-  if (!token) return res.status(401).send("Potty iss required");
+  if (!token) return res.status(401).send("loggin required");
 
   try {
     const data = jwt.verify(token, "shhhh");
