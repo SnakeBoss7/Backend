@@ -151,6 +151,44 @@ router.get("/like/:id", isloggedin, async (req, res) => {
   }
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+router.post("/follow/:id", isloggedin, async (req, res) => {
+  try {
+    const userId = req.user.userid;
+    const targetId = req.params.id;
+
+    if (userId === targetId) {
+      return res.status(400).json({ error: "You cannot follow yourself." });
+    }
+
+    const user = await userModel.findById(userId);
+    const targetUser = await userModel.findById(targetId);
+
+    const alreadyFollowing = user.following.includes(targetId);
+
+    if (alreadyFollowing) {
+      // Unfollow
+      user.following.pull(targetId);
+      targetUser.followers.pull(userId);
+    } else {
+      // Follow
+      user.following.push(targetId);
+      targetUser.followers.push(userId);
+    }
+
+    await user.save();           // ✅ Save user (important!)
+    await targetUser.save();     // ✅ Save target user
+
+    res.status(200).json({
+      message: alreadyFollowing ? "Unfollowed" : "Followed",
+      isFollowing: !alreadyFollowing,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to follow/unfollow user." });
+  }
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get("/edit/:id", isloggedin, async (req, res) => {
   try {
     const post = await postModel.findById(req.params.id);
@@ -241,7 +279,7 @@ router.get("/someoneprofile/:userId", async (req, res) => {
       return res.status(400).json({ error: "Invalid user ID format" });
     }
 
-    const user = await userModel.findById(userId).select("username email profilepic");
+    const user = await userModel.findById(userId).select("username email profilepic followers following");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
