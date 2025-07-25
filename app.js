@@ -24,8 +24,9 @@ app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')
 
 
 app.use(cors({
-  origin: process.env.ORIGINKA,  // React frontend origin
-  credentials: true                 // allow sending cookies
+  origin: process.env.ORIGINKA,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // only if you’re using cookies or sessions
 }));
 
 app.get('/', (req, res) => {
