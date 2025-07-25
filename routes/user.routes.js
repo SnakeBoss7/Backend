@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const userModel = require('../models/user');
-const postModel = require('../models/post');
+const userModel = require('../Models/user');
+const postModel = require('../Models/post');
 const upload=require ("../config/multerconfig")
 
 const jwt=require('jsonwebtoken')
