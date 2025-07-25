@@ -24,7 +24,7 @@ app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')
 
 
 app.use(cors({
-  origin: 'http://localhost:3000',  // React frontend origin
+  origin: process.env.ORIGINKA,  // React frontend origin
   credentials: true                 // allow sending cookies
 }));
 
