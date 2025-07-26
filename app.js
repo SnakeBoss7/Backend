@@ -18,6 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')));
 
+console.log('DEBUG_URL:', process.env.DEBUG_URL);
+console.log('MONGO_URI:', process.env.MONGO_URI ? '✅ set' : '❌ MISSING');
+
+
 // --- CORS CONFIGURATION ---
 const allowedOrigins = [
   process.env.ORIGINKA, // from .env
@@ -26,23 +30,19 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Not allowed by CORS: ${origin}`));
-    }
-  },
+  origin: [
+    'https://frontend-phi-one-55.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Set-Cookie'],
-  maxAge: 86400
 };
-
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
 
 // --- ROUTES ---
 app.get('/', (req, res) => {
