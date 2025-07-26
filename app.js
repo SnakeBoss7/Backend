@@ -68,14 +68,7 @@ app.get('/', (req, res) => {
 // Your routes
 app.use('/users', userRoutes);
 
-// app.get('/test-cors', (req, res) => {
-//     res.json({ 
-//         message: 'CORS test endpoint',
-//         origin_configured: process.env.ORIGINKA || 'NOT SET',
-//         headers: req.headers,
-//         timestamp: new Date().toISOString()
-//     });
-// });
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
