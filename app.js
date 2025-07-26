@@ -22,7 +22,7 @@ const path = require('path');
 // Serve static files from /images/uploads
 app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')));
 
-
+console.log('CORS Origin:', process.env.ORIGINKA);
 app.use(cors({
   origin: process.env.ORIGINKA,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
