@@ -46,6 +46,7 @@ app.options('*', cors(corsOptions));
 
 // --- ROUTES ---
 app.get('/', (req, res) => {
+   console.log('✅ Backend root hit');
   res.json({
     message: 'Hello World',
     cors_origin: process.env.ORIGINKA,
