@@ -7,7 +7,7 @@ const upload=require ("../config/multerconfig")
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcrypt')
 
-const cookieParser = require('cookie-parser');
+
 const path=require('path')
 
 router.get('/logout', (req, res) => {
@@ -51,22 +51,23 @@ router.post('/register',async (req,res)=>{
        console.log(token);
        res.cookie("token",token)
        res.send("registered")
+      })
     })
   })
-})
-
-router.post('/login',async (req,res)=>{
+  
+  router.post('/login',async (req,res)=>{
     let {email,password}=req.body
     console.log(req.body)
- let user=await userModel.findOne({email:email})  /*left wala data base mai email aur right waha jo body me mila */
+    let user=await userModel.findOne({email:email})  /*left wala data base mai email aur right waha jo body me mila */
     if(!user) return res.status(500).send("Kuch galat hai")
-     
+      
       bcrypt.compare(password,user.password, function(err,result){
         if(result){ 
-              console.log("user to mil gaya")
+          console.log("user to mil gaya")
           let token=jwt.sign({email:email,userid:user._id},"shhhh")
-           res.cookie("token",token);
-           console.log("User found:", user);
+          res.cookie("token",token);
+          console.log("User found:", user);
+          console.log(token);
          return(
     
            res.status(200).json({ user })
