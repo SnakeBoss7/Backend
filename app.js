@@ -1,64 +1,38 @@
 const dotenv = require('dotenv');
 dotenv.config();
-
 const express = require('express');
 const cors = require('cors');
+const app = express();
 const cookieParser = require('cookie-parser');
-const path = require('path');
-
+const userModel = require('./models/user');
 const userRoutes = require('./routes/user.routes');
+
+
+
 const connectDB = require('./db');
 
 connectDB();
 
-const app = express();
 
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json()); // <-- add this line before your routes
 app.use(express.urlencoded({ extended: true }));
+const path = require('path');
+
+// Serve static files from /images/uploads
 app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')));
 
-console.log('DEBUG_URL:', process.env.DEBUG_URL);
-console.log('MONGO_URI:', process.env.MONGO_URI ? '✅ set' : '❌ MISSING');
 
+app.use(cors({
+  origin: 'http://localhost:3000',  // React frontend origin
+  credentials: true                 // allow sending cookies
+}));
 
-// --- CORS CONFIGURATION ---
-const allowedOrigins = [
-  process.env.ORIGINKA, // from .env
-  'http://localhost:3000',
-  'http://localhost:5173'
-];
-
-const corsOptions = {
-  origin: [
-    'https://frontend-phi-one-55.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Set-Cookie'],
-};
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-
-
-// --- ROUTES ---
 app.get('/', (req, res) => {
-   console.log('✅ Backend root hit');
-  res.json({
-    message: 'Hello World',
-    cors_origin: process.env.ORIGINKA,
-    timestamp: new Date().toISOString()
-  });
+    res.send('Hello World');
 });
+
 app.use('/users', userRoutes);
 
-// --- ERROR HANDLING ---
-app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
-  res.status(500).json({ error: err.message });
-});
 
-module.exports = app;
+module.exports=app
