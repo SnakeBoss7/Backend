@@ -10,8 +10,6 @@ const bcrypt=require('bcrypt')
 const cookieParser = require('cookie-parser');
 const path=require('path')
 
-router.use("/images/uploads", express.static(path.join(__dirname, "images/uploads")));
-
 router.get('/logout', (req, res) => {
   res.clearCookie("token");
   res.status(200).json({ message: "Logged out" });
