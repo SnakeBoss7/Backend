@@ -13,6 +13,10 @@ const connectDB = require('./db');
 
 connectDB();
 
+app.use(cors({
+  origin: 'https://new-one-tawny-19.vercel.app',  // React frontend origin
+  credentials: true                 // allow sending cookies
+}));
 
 app.use(cookieParser());
 app.use(express.json()); // <-- add this line before your routes
@@ -23,10 +27,6 @@ const path = require('path');
 app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')));
 
 
-app.use(cors({
-  origin: 'https://new-one-tawny-19.vercel.app',  // React frontend origin
-  credentials: true                 // allow sending cookies
-}));
 
 app.get('/', (req, res) => {
     res.send('Hello World');

@@ -65,7 +65,12 @@ router.post('/register',async (req,res)=>{
         if(result){ 
           console.log("user to mil gaya")
           let token=jwt.sign({email:email,userid:user._id},"shhhh")
-          res.cookie("token",token);
+          res.cookie("token",token,{
+  httpOnly: true,
+  secure: false, // set to true in production with HTTPS
+  sameSite: 'lax', // important for cross-origin
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+});
           console.log("User found:", user);
           console.log(token);
          return(
