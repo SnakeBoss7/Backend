@@ -24,7 +24,7 @@ app.use('/images/uploads', express.static(path.join(__dirname, 'images/uploads')
 
 
 app.use(cors({
-  origin: 'https://new-pdu95vuau-insaens-projects.vercel.app',  // React frontend origin
+  origin: 'new-one-tawny-19.vercel.app',  // React frontend origin
   credentials: true                 // allow sending cookies
 }));
 
