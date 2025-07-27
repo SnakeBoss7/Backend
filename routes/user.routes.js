@@ -47,9 +47,14 @@ router.post('/register',async (req,res)=>{
         name,
         password:hash
        })
-       let token=jwt.sign({email:email,userid:user._id},"shhhh")
+       let token=jwt.sign({email:email,userid:user._id},process.env.JWT_SECRET || 'shhhh')
        console.log(token);
-       res.cookie("token",token)
+       res.cookie("token",token,{
+  httpOnly: true,
+  secure: true, // set to true in production with HTTPS
+  sameSite: 'none', // important for cross-origin
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+})
        res.send("registered")
       })
     })
@@ -64,11 +69,11 @@ router.post('/register',async (req,res)=>{
       bcrypt.compare(password,user.password, function(err,result){
         if(result){ 
           console.log("user to mil gaya")
-          let token=jwt.sign({email:email,userid:user._id},"shhhh")
+          let token=jwt.sign({email:email,userid:user._id},process.env.JWT_SECRET || 'shhhh')
           res.cookie("token",token,{
   httpOnly: true,
   secure: true, // set to true in production with HTTPS
-  sameSite: 'lax', // important for cross-origin
+  sameSite: 'none', // important for cross-origin
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 });
           console.log("User found:", user);

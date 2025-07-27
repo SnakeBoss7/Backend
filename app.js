@@ -13,11 +13,12 @@ const connectDB = require('./db');
 
 connectDB();
 
+
 app.use(cors({
-  origin: 'https://new-one-tawny-19.vercel.app',  // React frontend origin
+  origin: process.env.ORIGIN || 'https://new-one-tawny-19.vercel.app',  // React frontend origin
   credentials: true                 // allow sending cookies
 }));
-
+console.log(process.env.ORIGIN);
 app.use(cookieParser());
 app.use(express.json()); // <-- add this line before your routes
 app.use(express.urlencoded({ extended: true }));
