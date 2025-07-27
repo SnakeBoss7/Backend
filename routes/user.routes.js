@@ -48,6 +48,7 @@ router.post('/register',async (req,res)=>{
         password:hash
        })
        let token=jwt.sign({email:email,userid:user._id},"shhhh")
+       console.log(token);
        res.cookie("token",token)
        res.send("registered")
     })
