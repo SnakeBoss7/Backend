@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
-  username:String,
-  name:String,
-  email:String,
-  password:String,
-  profilepic:{
+  username: String,
+  name: String,
+  email: String,
+  password: String,
+  profilepic: {
     type: String,
     default: "default.png"
   },
-  posts:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"post"
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "post"
   }],
-   followers: [{
+  followers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "user"
   }],
